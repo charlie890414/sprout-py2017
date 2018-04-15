@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>留言板</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="/static/base.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300,400|Quattrocento+Sans|Crimson+Text|Tangerine|Alex+Brush" rel="stylesheet">
+        <link href="/static/base.css" rel="stylesheet">
+    </head>
+    <body>
+        <header class="page-header" id="header">
+                <h1>
+                    <span style="color: grey">#</span>留言板
+                </h1>
+        </header>
+        <div id="board" class="container section">
+            <h2><span style="color: grey;letter-spacing:8px;">#</span>留言</h2>
+            <form onsubmit="getFilter();return false;">
+                <label for="filter">Filter(留言人/訊息內容): </label> 
+                <input id="filter" type="text" name="filter" class="round">
+                <button type="submit" class="btn small-btn">Apply</button>
+                <button onclick=clearFilter() class="btn small-btn">Clear</button>
+            </form>
+            <br>
+            <form onsubmit="change_sort('time');getList(1);return false;" class="row">
+                <button id="time_btn" class="small-btn">以時間排序</button>
+            </form>
+            <form onsubmit="change_sort('user');getList(1);return false;" class="row">
+                <button id="user_btn" class="small-btn">以留言人排序</button>
+            </form>
+            <form onsubmit="change_sort('len');getList(1);return false;"  class="row">
+                <button id="len_btn" class="small-btn">以留言長短排序</button>
+            </form>     
+            <div id="page_num" style="float:right;">第 1 頁</div>
+
+            <ol id="messageList">
+                {% for message in message_pool %}
+                    <li class="message"> <span>
+                        <span style="float:right;" >
+                            <a class="close" href="javascript:Delete({{message[2]}});">×</a>
+                        </span>
+                        <div class="content">
+                            <p id="from">From: {{message[0]}}</p>
+                            <p>{{message[1]}}</p>
+                        </div>
+                        <br>
+                        <div class="rightbottom">
+                            {{message[3]}}
+                        </div> 
+                    </span></li>
+                    <br>
+                {% endfor %}
+            </ol>
+            <div class="rightbottom">
+                <form onsubmit="getPageRel(-1);return false;" class="row">
+                    <button class="small-btn">上一頁</button>
+                </form>
+                <form onsubmit="getPageDir(event);return false;" class="row">
+                    跳至第<input id="page" type="text" size="3"></input>頁
+                </form>
+                <form onsubmit="getPageRel(1);return false;" class="row">
+                    <button class="small-btn">下一頁</button>
+                </form>   
+            </div> 
+        </div> 
+        <div class="container section">
+            <h2><span style="color: grey;letter-spacing:8px;">#</span>新增留言</h2>
+            <form action="/add" method="post">
+                    <label for="user" style="display:inline-block;">From: </label>
+                    <div>
+                        <input id="user" type="text" name="from_user" class="round">
+                    </div>
+
+                    <label for="new_message" style="display:inline-block;">訊息: </label>
+                    <div>
+                        <textarea id="new_message" name="new_message" class="round" 
+                        cols="70" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">提交</button>
+            </form>
+        </div>
+   
+    </body>
+</html>
